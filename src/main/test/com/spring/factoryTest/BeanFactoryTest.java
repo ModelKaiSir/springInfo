@@ -1,9 +1,7 @@
 package com.spring.factoryTest;
 
-import com.spring.domain.Beans;
-import com.spring.domain.Car;
-import com.spring.domain.MyBeanPostProcessor;
-import com.spring.domain.MyInnstantiationAwareBeanPostProcessor;
+import com.spring.domain.*;
+import com.spring.edit.CustomCarEditor;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.ApplicationContext;
@@ -30,14 +28,14 @@ public class BeanFactoryTest {
 
         DefaultListableBeanFactory factory = new DefaultListableBeanFactory();
         XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(factory);
-
         reader.loadBeanDefinitions(resource);
 
         factory.addBeanPostProcessor(new MyBeanPostProcessor());
         factory.addBeanPostProcessor(new MyInnstantiationAwareBeanPostProcessor());
+        factory.registerCustomEditor(Car.class, CustomCarEditor.class);
 
-        Car car = factory.getBean("car", Car.class);
-
+        Boss boss = factory.getBean("boss", Boss.class);
+        System.out.println(boss);
         factory.destroySingletons();
     }
 
@@ -45,28 +43,11 @@ public class BeanFactoryTest {
     public void createApplicationContext() {
 
         ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
-        Car car = context.getBean("car1", Car.class);
+        Boss boss = context.getBean("boss", Boss.class);
 
-        System.out.println(car.getBrand());
-
-        System.out.println(car.getColor());
-
-        System.out.println(car.getMaxSpeed());
+        System.out.println(boss.getC().toString());
     }
 
-    @Test
-    public void createApplicationContextClassBean() {
-
-        ApplicationContext context = new AnnotationConfigApplicationContext(Beans.class);
-
-        Car car = context.getBean("car", Car.class);
-
-        System.out.println(car.getBrand());
-
-        System.out.println(car.getColor());
-
-        System.out.println(car.getMaxSpeed());
-    }
 
     /**
      * bean的生命周期
