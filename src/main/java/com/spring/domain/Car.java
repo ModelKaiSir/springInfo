@@ -13,6 +13,7 @@ public class Car implements BeanNameAware,BeanFactoryAware,BeanPostProcessor,Ini
     private String brand;
     private String color;
     private int maxSpeed;
+    private double price;
 
     private BeanFactory beanFactory;
     private String beanName;
@@ -86,5 +87,23 @@ public class Car implements BeanNameAware,BeanFactoryAware,BeanPostProcessor,Ini
 
     public void setMaxSpeed(int maxSpeed) {
         this.maxSpeed = maxSpeed;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return "Car{" +
+                "brand='" + brand + '\'' +
+                ", color='" + color + '\'' +
+                ", maxSpeed=" + maxSpeed +
+                ", price=" + price +
+                '}';
     }
 }
