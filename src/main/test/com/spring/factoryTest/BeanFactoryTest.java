@@ -5,6 +5,7 @@ import com.spring.edit.CustomCarEditor;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,9 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 import org.testng.annotations.Test;
 
 import java.security.interfaces.RSAKey;
+import java.util.GregorianCalendar;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class BeanFactoryTest {
 
@@ -53,7 +57,7 @@ public class BeanFactoryTest {
      * bean的生命周期
      */
     @Test
-    public void beanFactoryBeanInit() {
+    public void createApplicationContextAnnotation() {
         ApplicationContext context = new AnnotationConfigApplicationContext(Beans.class);
         Car car = context.getBean("car", Car.class);
 
@@ -65,5 +69,30 @@ public class BeanFactoryTest {
 
     }
 
+
+    @Test
+    public void i18n() throws Exception{
+
+        ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+        MessageSource msgSource = (MessageSource) context.getBean("myResource");
+        Object[] params = {"QiuKai",new GregorianCalendar().getTime()};
+
+        String a = "";
+
+        for (int i = 0; i < 2; i++) {
+            a = msgSource.getMessage("greeting.common",params, Locale.US);
+            System.out.println(a);
+            if (i == 1){
+                break;
+            }
+            Thread.currentThread().sleep(20000);
+        }
+
+        a=msgSource.getMessage("greeting.morning",params, Locale.CHINA);
+        System.out.println(a);
+        a =msgSource.getMessage("greeting.afternoon",params, Locale.CHINA);
+        System.out.println(a);
+
+    }
 
 }
