@@ -42,8 +42,39 @@
         <property name="color" value="red"></property>
         <property name="maxSpeed" value="99"></property>
     </bean>
-
+    <!-- 使用属性编辑器 -->
     <bean id="boss" class="com.spring.domain.Boss">
         <property name="c" value="红旗,200,2000.00"></property>
+    </bean>
+    <!-- aop　advice 增强 -->
+    <bean id="greetingBefore" class="com.spring.proxy.WaiterBeforeAdvice"></bean>
+    <bean id="greetingAfter" class="com.spring.proxy.WaiterAfterAdvice"></bean>
+    <bean id="greetingAround" class="com.spring.proxy.WaiterInterceptor"></bean>
+    <bean id="target" class="com.spring.proxy.NaiveWaiter"></bean>
+
+    <bean id="forumServiceTarget" class="com.spring.proxy.ForumService"></bean>
+    <bean id="forumServiceTs" class="com.spring.proxy.ForumServiceImpl"></bean>
+    <bean id="transactionManager" class="com.spring.proxy.TransactionManager"></bean>
+
+    <bean id="pmonitor" class="com.spring.proxy.ControllablePerformanceMonitor"></bean>
+
+    <!--<bean id="waiter" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="interfaces" value="com.spring.proxy.Waiter"></property>
+        <property name="interceptorNames" value="greetingBefore,greetingAfter"></property>
+        <property name="target" ref="target"></property>
+    </bean>-->
+
+    <!--<bean id="forum" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="interceptorNames" value="transactionManager"></property>
+        <property name="target" ref="forumServiceTarget"></property>
+        <property name="proxyTargetClass" value="true"></property>
+    </bean>-->
+
+    <bean id="pmon" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="interfaces" value="com.spring.proxy.Monitorable"></property>
+        <property name="interceptorNames" value="pmonitor"></property>
+        <property name="target" ref="forumServiceTs"></property>
+        <property name="proxyTargetClass" value="true"></property>
+
     </bean>
 </beans>

@@ -1,9 +1,5 @@
 package com.spring.proxy;
 
-import org.testng.annotations.Test;
-import sun.misc.Perf;
-
-import java.lang.reflect.Proxy;
 import java.util.concurrent.TimeUnit;
 
 public class ForumServiceImpl implements ForumServiceTs{
@@ -37,26 +33,4 @@ public class ForumServiceImpl implements ForumServiceTs{
         System.out.println("my");
     }
 
-    @Test
-    public void startServices(){
-
-        ForumServiceTs service = new ForumServiceImpl();
-        ForumInvocationHandler handler = new ForumInvocationHandler(service);
-        ForumServiceTs proxy = (ForumServiceTs) Proxy.newProxyInstance(service.getClass().getClassLoader(),service.getClass().getInterfaces(),handler);
-
-        proxy.removeForum(1390);
-        proxy.removeTopic(1283);
-        proxy.my();
-    }
-
-    @Test
-    public void startServicesProxy(){
-
-        ForumProxy proxy = new ForumProxy();
-        ForumServiceTs service = (ForumServiceTs) proxy.getProxy(ForumServiceImpl.class);
-
-        service.removeForum(1390);
-        service.removeTopic(1283);
-        service.my();
-    }
 }
