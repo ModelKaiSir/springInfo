@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- 自动创建代理 -->
+
+    <bean id="waiter" class="com.spring.proxy.NaiveWaiter"></bean>
+    <bean id="seller" class="com.spring.proxy.NaiveSeller"></bean>
+    <bean id="greetingBefore" class="com.spring.proxy.WaiterBeforeAdvice"></bean>
+
+    <!-- BeanNameAutoProxyCreator 根据bean名称进行自动代理 -->
+  <!--  <bean class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+        <property name="beanNames" value="waiter"></property>
+        <property name="interceptorNames" value="greetingBefore"></property>
+        <property name="optimize" value="true"></property>
+    </bean>
+-->
+    <!-- -->
+    <bean id="regexpAdvisor" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
+        <property name="patterns" value=".*greet.*"></property>
+        <property name="advice" ref="greetingBefore"></property>
+    </bean>
+
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator">
+        <property name="proxyTargetClass" value="true"></property>
+    </bean>
+</beans>

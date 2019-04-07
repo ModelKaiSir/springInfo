@@ -47,6 +47,7 @@
         <property name="c" value="红旗,200,2000.00"></property>
     </bean>
     <!-- aop　advice 增强 -->
+
     <bean id="greetingBefore" class="com.spring.proxy.WaiterBeforeAdvice"></bean>
     <bean id="greetingAfter" class="com.spring.proxy.WaiterAfterAdvice"></bean>
     <bean id="greetingAround" class="com.spring.proxy.WaiterInterceptor"></bean>
@@ -75,6 +76,71 @@
         <property name="interceptorNames" value="pmonitor"></property>
         <property name="target" ref="forumServiceTs"></property>
         <property name="proxyTargetClass" value="true"></property>
+    </bean>
 
+    <!-- 切面 -->
+    <bean id="waiterTarget" class="com.spring.proxy.NaiveWaiter"></bean>
+    <bean id="greetingAdvisor" class="com.spring.proxy.GreetingAdvisor">
+        <property name="advice" ref="greetingBefore"></property>
+    </bean>
+
+    <bean id="parent" abstract="true" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="interceptorNames" value="greetingAdvisor"></property>
+        <property name="proxyTargetClass" value="true"></property>
+    </bean>
+
+    <bean id="waiter" parent="parent" p:target-ref="waiterTarget"></bean>
+
+    <bean id="dynamicPointcut" class="com.spring.proxy.GreetingDynamicPointcut"></bean>
+
+    <bean id="dynamicAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
+        <property name="pointcut" ref="dynamicPointcut"></property>
+        <property name="advice" ref="greetingBefore"></property>
+    </bean>
+
+    <bean id="waiter2" class="org.springframework.aop.framework.ProxyFactoryBean"
+          p:interceptorNames="dynamicAdvisor"
+          p:target-ref="waiterTarget"
+    p:proxyTargetClass="true"></bean>
+
+    <!-- 流程切面 -->
+    <bean id="controlFlowPointcut" class="org.springframework.aop.support.ControlFlowPointcut">
+        <constructor-arg type="java.lang.Class" value="com.spring.proxy.WaiterDelegate"></constructor-arg>
+        <constructor-arg type="java.lang.String" value="service"></constructor-arg>
+    </bean>
+    <bean id="controlFlowAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
+        <property name="pointcut" ref="controlFlowPointcut"></property>
+        <property name="advice" ref="greetingBefore"></property>
+    </bean>
+
+    <bean id="waiter3" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="interceptorNames" value="controlFlowAdvisor"></property>
+        <property name="target" ref="waiterTarget"></property>
+        <property name="proxyTargetClass" value="true"></property>
+    </bean>
+
+    <!-- 复合切面 -->
+    <bean id="gcp" class="com.spring.proxy.GreetingComposablePointcut"></bean>
+    <bean id="composableAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
+        <property name="pointcut" value="#{gcp.intersectionPointcut}"></property>
+        <property name="advice" ref="greetingBefore"></property>
+    </bean>
+    <bean id="waiter4" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="interceptorNames" value="composableAdvisor"></property>
+        <property name="target" ref="waiterTarget"></property>
+        <property name="proxyTargetClass" value="true"></property>
+    </bean>
+
+    <!-- 引介界面 -->
+    <bean id="introductionAdvisor" class="org.springframework.aop.support.DefaultIntroductionAdvisor">
+        <constructor-arg>
+            <bean class="com.spring.proxy.ControllablePerformanceMonitor"></bean>
+        </constructor-arg>
+    </bean>
+
+    <bean id="forumService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="interceptorNames" value="introductionAdvisor"></property>
+        <property name="target" ref="forumServiceTs"></property>
+        <property name="proxyTargetClass" value="true"></property>
     </bean>
 </beans>
