@@ -65,4 +65,8 @@ public class User implements Serializable {
     public void setLastVisit(Date lastVisit) {
         this.lastVisit = lastVisit;
     }
+
+    public boolean isVipMember(String userName){
+        return userName.equals("Tom") || userName.equals("QiuKai");
+    }
 }

@@ -27,7 +27,7 @@
         <property name="dataSource" ref="dataSource"></property>
     </bean>
 
-    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <bean id="datasourceTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"></property>
     </bean>
 
@@ -38,7 +38,8 @@
         <aop:advisor pointcut-ref="serviceMethod" advice-ref="txAdvice"></aop:advisor>
     </aop:config>
 
-    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+    <!-- default   -->
+    <tx:advice id="txAdvice" transaction-manager="datasourceTransactionManager">
         <tx:attributes>
             <tx:method name="*"/>
         </tx:attributes>

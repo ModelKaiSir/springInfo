@@ -3,6 +3,9 @@ package com.spring.proxy.aspect;
 import com.spring.proxy.NaiveWaiter;
 import com.spring.proxy.Supplier;
 import com.spring.proxy.Waiter;
+import com.spring.proxy.aspect.obj.NaiveWaiterInter;
+import com.spring.proxy.aspect.obj.Seller;
+import com.spring.proxy.aspect.obj.WaiterInter;
 import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -39,5 +42,23 @@ public class AspectJProxyTest {
         Supplier supplier = (Supplier) waiter;
 
         supplier.sell("Good");
+    }
+
+    @Test
+    public void pointcut(){
+        ApplicationContext context = new ClassPathXmlApplicationContext(classPath);
+
+        NaiveWaiterInter naiveWaiter = (NaiveWaiterInter) context.getBean("naiveWaiter");
+
+        naiveWaiter.smile("QiuKai",19);
+    }
+
+    @Test
+    public void after(){
+        ApplicationContext context = new ClassPathXmlApplicationContext(classPath);
+
+        Seller seller = (Seller) context.getBean("seller");
+
+        seller.sell("Water","QiuKai");
     }
 }
